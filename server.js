@@ -3,7 +3,7 @@ const app = express();
 const server = require("http").Server(app);
 const io = require("socket.io")(server);
 const { v4: uuidV4 } = require("uuid");
-
+const { ExpressPeerServer } = require("peer");
 app.set("view engine", "ejs");
 app.use(express.static("public"));
 
@@ -25,5 +25,12 @@ io.on("connection", (socket) => {
     });
   });
 });
-
+const expressPeerServer = ExpressPeerServer(server, {
+  debug: true,
+  path: "/",
+  corsOptions: {
+    origin: true,
+  },
+});
+app.use(expressPeerServer);
 server.listen(3500);
